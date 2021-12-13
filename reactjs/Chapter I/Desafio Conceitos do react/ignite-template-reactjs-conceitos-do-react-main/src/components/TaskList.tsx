@@ -29,22 +29,22 @@ export function TaskList() {
   }
 
   function handleToggleTaskCompletion(id: number) {
-    let currentTasks = tasks.map((task) => {
-      if (task.id === id) {
-        task.isComplete = !task.isComplete;
-      }
-      return task;
-    });
+    let newTasks = tasks.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            isComplete: !task.isComplete,
+          }
+        : task
+    );
 
-    setTasks(currentTasks);
+    setTasks(newTasks);
   }
 
   function handleRemoveTask(id: number) {
-    let currentTasks = tasks.filter((task) => {
-      return task.id !== id;
-    });
+    let filteredTasks = tasks.filter((task) => task.id !== id);
 
-    setTasks(currentTasks);
+    setTasks(filteredTasks);
   }
 
   return (
