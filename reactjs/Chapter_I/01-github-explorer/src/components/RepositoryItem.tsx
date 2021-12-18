@@ -1,4 +1,4 @@
-interface RepositoryIntemProps {
+interface RepositoryItemProps {
   repository: {
     name: string;
     description: string;
@@ -6,7 +6,7 @@ interface RepositoryIntemProps {
   };
 }
 
-export default function RepositoryItem(props: RepositoryIntemProps) {
+export default function RepositoryItem(props: RepositoryItemProps) {
   return (
     <li>
       <strong>{props.repository?.name ?? "default"}</strong>
