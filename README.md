@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">
-    
+    Em progresso
 </h1>
 
 <br>
@@ -19,7 +19,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [JSON-Server](https://github.com/typicode/json-server)
 
 ## 💻 Projeto
-
+ 
 Repositório para o Ignite, curso de especialização para programadores que querem ir para o próximo nível. 
 
 </br>
