@@ -1,14 +1,18 @@
 <p align="center">
-  <img src="https://img.shields.io/github/stars/thyagoaraujom/Ignite?label=stars&message=MIT&color=8257E5&labelColor=000000" alt="Stars">
-
   <img  src="https://img.shields.io/static/v1?label=license&message=MIT&color=8257E5&labelColor=000000" alt="License">   
 </p>
 
 <h1 align="center">
-    Em progresso
+    Atualmente parado - Continuação em breve
 </h1>
 
 <br>
+
+## 💻 Projeto
+ 
+Repositório para o Ignite, curso de especialização para programadores que querem ir para o próximo nível. Ele vai ficar parado até abril ou algo assim, estava utilizando o mês gratuito, pretendo voltar com ele depois quando possível.
+
+</br>
 
 ## 🧪 Tecnologias
 
@@ -17,12 +21,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [React](https://reactjs.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [JSON-Server](https://github.com/typicode/json-server)
-
-## 💻 Projeto
- 
-Repositório para o Ignite, curso de especialização para programadores que querem ir para o próximo nível. 
-
-</br>
+- [Sass](https://sass-lang.com)
 
 ---
 
