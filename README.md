@@ -16,7 +16,7 @@ Repositório para o Ignite, curso de especialização para programadores que que
 
 ## 🧪 Tecnologias
 
-Esse projeto foi desenvolvido com as seguintes tecnologias:
+Esse projeto está sendo desenvolvido com as seguintes tecnologias:
 
 - [React](https://reactjs.org)
 - [TypeScript](https://www.typescriptlang.org/)
