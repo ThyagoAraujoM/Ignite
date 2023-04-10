@@ -3,13 +3,13 @@
 </p>
 
 <h1 align="center">
-    Atualmente parado - Continuação em breve
+    Voltando com tudo
 </h1>
 
 <br>
 
 ## 💻 Projeto
- 
+
 Repositório para o Ignite, curso de especialização para programadores que querem ir para o próximo nível. Ele vai ficar parado até abril ou algo assim, estava utilizando o mês gratuito, pretendo voltar com ele depois quando possível.
 
 </br>
