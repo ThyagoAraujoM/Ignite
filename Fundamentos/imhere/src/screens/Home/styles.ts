@@ -47,4 +47,9 @@ export const styles = StyleSheet.create({
   participantsContainer: {
     gap: 10,
   },
+  listEmptyText: {
+    color: "#FFF",
+    fontSize: 14,
+    textAlign: "center",
+  },
 });
