@@ -2,12 +2,14 @@ import React from "react";
 import { Container } from "./styles";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
+import { GroupCard } from "@components/GroupCard";
 
 export function Groups() {
   return (
     <Container>
       <Header></Header>
       <Highlight title="Turmas" subTitle="jogue com sua turma" />
+      <GroupCard title="Galera do Ignite" />
     </Container>
   );
 }
