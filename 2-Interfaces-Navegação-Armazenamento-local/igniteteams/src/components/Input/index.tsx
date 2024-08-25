@@ -1,7 +1,6 @@
 import React from "react";
-
 import { Container } from "./styles";
 
-export function NewGroupe() {
+export function Input() {
   return <Container></Container>;
 }
