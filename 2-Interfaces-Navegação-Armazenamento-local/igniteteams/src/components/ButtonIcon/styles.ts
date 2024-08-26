@@ -1,13 +1,14 @@
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+
 export type ButtonIconTypeProps = "PRIMARY" | "SECONDARY";
 
 type Props = {
   type: ButtonIconTypeProps;
 };
 
-export const Container = styled(TouchableOpacity)<Props>`
+export const Container = styled(TouchableOpacity)`
   width: 56px;
   height: 56px;
 
