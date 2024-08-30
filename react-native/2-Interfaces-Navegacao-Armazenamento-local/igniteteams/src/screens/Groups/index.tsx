@@ -9,7 +9,7 @@ import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 
 export function Groups() {
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroup] = useState([]);
 
   const navigation = useNavigation();
 
