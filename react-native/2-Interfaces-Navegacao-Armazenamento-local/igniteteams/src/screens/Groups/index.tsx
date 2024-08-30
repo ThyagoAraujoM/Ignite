@@ -7,11 +7,28 @@ import { FlatList } from "react-native";
 import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export function Groups() {
+type RootParamList = {
+  groups: undefined;
+  new: undefined;
+  players: {
+    group: string;
+  };
+};
+
+type Props = {
+  navigation: NativeStackNavigationProp<RootParamList, "groups">;
+};
+
+export function Groups({ navigation }: Props) {
   const [groups, setGroups] = useState([]);
-  const navigation = useNavigation();
 
+  // const navigation = useNavigation();
+
+  // Possível utilizar navigation sendo passado pelo props do componente e configurado suas propriedades e tipagem,
+  // Ou utilizar o próprio hook do react native useNavigation que já volta de forma mais enxuta as mesmas funçãoes
+  // e funcionalidades
   function handleNewGroup() {
     navigation.navigate("new");
   }
