@@ -8,10 +8,11 @@ import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { groupsGetAll } from "@storage/group/groupsGetAll";
+import { Loading } from "@components/Loading";
 
 export function Groups() {
   const [groups, setGroup] = useState<string[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   function handleNewGroup() {
@@ -20,10 +21,13 @@ export function Groups() {
 
   async function fetchGroupd() {
     try {
+      setLoading(true);
       const data = await groupsGetAll();
       setGroup(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -41,14 +45,18 @@ export function Groups() {
     <Container>
       <Header></Header>
       <Highlight title="Turmas" subTitle="jogue com sua turma" />
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <GroupCard onPress={() => handleOpenGroup(item)} title={item} />}
-        ListEmptyComponent={() => <ListEmpty message="Que tal cadastrar a primeira turma" />}
-        contentContainerStyle={groups.length === 0 && { flex: 1 }}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={groups}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => <GroupCard onPress={() => handleOpenGroup(item)} title={item} />}
+          ListEmptyComponent={() => <ListEmpty message="Que tal cadastrar a primeira turma" />}
+          contentContainerStyle={groups.length === 0 && { flex: 1 }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
       <Button title="Criar nova turma" onPress={handleNewGroup} />
     </Container>
   );
