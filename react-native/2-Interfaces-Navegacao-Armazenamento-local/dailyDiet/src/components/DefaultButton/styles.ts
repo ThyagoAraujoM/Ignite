@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 
 export const Container = styled.TouchableOpacity`
@@ -17,7 +17,9 @@ export const Icon = styled(AntDesign)`
 `;
 
 export const TextButton = styled.Text`
-  color: ${({ theme }) => theme.COLORS.WHITE};
-  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
-  font-size: ${({ theme }) => theme.FONT_SIZES.MD}px;
+  ${({ theme }) => css`
+    color: ${theme.COLORS.WHITE};
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${theme.FONT_SIZES.MD}px;
+  `}
 `;

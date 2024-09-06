@@ -1,4 +1,5 @@
-import styled from "styled-components/native";
+import type { StatusType } from "src/@types/Status";
+import styled, { css } from "styled-components/native";
 
 export const Container = styled.TouchableOpacity`
   flex-direction: row;
@@ -16,22 +17,24 @@ export const Divisor = styled.View`
 `;
 
 export const MealTime = styled.Text`
-  color: ${({ theme }) => theme.COLORS.GRAY_1};
-  font-size: ${({ theme }) => theme.FONT_SIZES.SSM}px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_1};
+    font-size: ${theme.FONT_SIZES.SSM}px;
+    font-family: ${theme.FONT_FAMILY.BOLD};
+  `}
 `;
 
 export const MealText = styled.Text`
   flex: 1;
-  color: ${({ theme }) => theme.COLORS.GRAY_2};
-  font-size: ${({ theme }) => theme.FONT_SIZES.MD}px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  ${({ theme }) => css`
+    color: ${theme.COLORS.GRAY_2};
+    font-size: ${theme.FONT_SIZES.MD}px;
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+  `}
 `;
 
-export type MealStatusType = "right" | "wrong";
-
 type MealStatusProps = {
-  status: MealStatusType;
+  status: StatusType;
 };
 
 export const MealStatus = styled.View<MealStatusProps>`

@@ -1,27 +1,19 @@
 import { SectionList, Text } from "react-native";
 import logo from "@assets/Logo.png";
 import userIcon from "@assets/UserIcon.png";
-import {
-  Container,
-  Header,
-  InputTitle,
-  Logo,
-  MealsDay,
-  Score,
-  ScoreIcon,
-  ScoreSubText,
-  TodayScore,
-  UserIcon,
-} from "./styles";
+import { Container, Header, InputTitle, Logo, MealsDay, UserIcon } from "./styles";
 import { DefaultButton } from "@components/DefaultButton";
 import { useTheme } from "styled-components/native";
 import { MealListItem } from "@components/MealListItem";
-import type { MealStatusType } from "@components/MealListItem/styles";
+import type { StatusType } from "src/@types/Status";
+import { StatusBar } from "expo-status-bar";
+import { DietScore } from "@components/DietScore";
+import { useNavigation } from "@react-navigation/native";
 
 type Meal = {
   time: string;
   text: string;
-  status: MealStatusType;
+  status: StatusType;
 };
 
 type Meals = {
@@ -126,41 +118,43 @@ export function Home() {
       ],
     },
   ];
-  const theme = useTheme();
 
-  function handleNavigateScoreDetails() {}
+  const navigation = useNavigation();
+
+  function handleNavationNewMeal() {
+    navigation.navigate("newmeal");
+  }
 
   return (
-    <Container>
-      <Header>
-        <Logo source={logo} />
-        <UserIcon source={userIcon} />
-      </Header>
-      <TodayScore>
-        <ScoreIcon
-          onPress={handleNavigateScoreDetails}
-          size={24}
-          name="arrow-top-right"
-          color={theme.COLORS.GREEN_DARK}
+    <>
+      <StatusBar translucent></StatusBar>
+      <Container>
+        <Header>
+          <Logo source={logo} />
+          <UserIcon source={userIcon} />
+        </Header>
+
+        <DietScore status="right" subText="das refeições dentro da dieta" title="90,86%" isOverViewPage={false} />
+
+        <InputTitle>Refeições</InputTitle>
+        <DefaultButton
+          onPress={handleNavationNewMeal}
+          text="Nova Refeição"
+          icon={{ name: "plus", color: "white", size: 24 }}
         />
-        <Score>90,86%</Score>
-        <ScoreSubText>das refeições dentro da dieta</ScoreSubText>
-      </TodayScore>
 
-      <InputTitle>Refeições</InputTitle>
-      <DefaultButton text="Nova Refeição" icon={{ name: "plus", color: "white", size: 24 }} />
-
-      <SectionList
-        sections={mealsRegisters}
-        keyExtractor={(item, index) => index.toString()}
-        renderSectionHeader={({ section }) => {
-          return <MealsDay>{section.title}</MealsDay>;
-        }}
-        renderItem={({ item }) => {
-          return <MealListItem text={item.text} status={item.status} time={item.time} />;
-        }}
-        initialNumToRender={5}
-      />
-    </Container>
+        <SectionList
+          sections={mealsRegisters}
+          keyExtractor={(item, index) => index.toString()}
+          renderSectionHeader={({ section }) => {
+            return <MealsDay>{section.title}</MealsDay>;
+          }}
+          renderItem={({ item }) => {
+            return <MealListItem text={item.text} status={item.status} time={item.time} />;
+          }}
+          initialNumToRender={5}
+        />
+      </Container>
+    </>
   );
 }
