@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { css } from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { StatusType } from "src/@types/Status";
+import { TextInput } from "react-native";
 
 export const Container = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.COLORS.GRAY_5};
@@ -61,7 +62,7 @@ export const InputLabel = styled.Text`
   `}
 `;
 
-export const Input = styled.TextInput`
+export const Input = styled(TextInput)`
   margin-top: 8px;
   padding: 12px 16px;
   border-radius: 6px;
@@ -77,6 +78,23 @@ export const HorizontalBox = styled.View`
   flex-direction: row;
   justify-content: space-between;
   gap: 20px;
+`;
+
+export const DateTimeButton = styled.TouchableOpacity`
+  margin-top: 8px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  ${({ theme }) => css`
+    border: 1px solid ${theme.COLORS.GRAY_5};
+  `};
+`;
+
+export const DateTimeText = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${theme.FONT_SIZES.MD}px;
+    color: ${theme.COLORS.GRAY_1};
+  `};
 `;
 
 type TypeMealButtonProps = {

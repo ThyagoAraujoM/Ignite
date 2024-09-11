@@ -1,1 +1,1 @@
-export type StatusType = "right" | "wrong";
+export type StatusType = "right" | "wrong" | "none";

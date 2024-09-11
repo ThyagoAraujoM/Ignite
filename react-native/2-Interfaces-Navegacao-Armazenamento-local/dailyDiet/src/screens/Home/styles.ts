@@ -1,8 +1,9 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import type { StatusType } from "src/@types/Status";
 import { css } from "styled-components/native";
+import { TouchableOpacity } from "react-native";
 
 export const Container = styled(SafeAreaView)`
   flex: 1;
@@ -15,11 +16,33 @@ export const Container = styled(SafeAreaView)`
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const Logo = styled.Image`
   width: 82px;
   height: 37px;
+`;
+
+export const UserContainer = styled.View`
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ResetIconContainer = styled(TouchableOpacity)`
+  border: 1px solid ${({ theme }) => theme.COLORS.GRAY_1};
+  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  padding-bottom: 2px;
+`;
+
+export const ResetIcon = styled(AntDesign)`
+  /* align-self: center; */
 `;
 
 export const UserIcon = styled.Image`

@@ -6,6 +6,7 @@ export const defaultTheme = {
     GREEN_DARK: "#639339",
     GREEN_MID: "#CBE4B4",
     GREEN_LIGHT: "#E5F0DB",
+    BRACKGROUND_MODAL: "#1b1d1e40",
     GRAY_1: "#1B1D1E",
     GRAY_2: "#333638",
     GRAY_3: "#5C6265",

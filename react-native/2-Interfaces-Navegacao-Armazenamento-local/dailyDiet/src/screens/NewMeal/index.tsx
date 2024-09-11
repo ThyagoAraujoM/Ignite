@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Container,
   Content,
+  DateTimeButton,
+  DateTimeText,
   Footer,
   GoBackIcon,
   Header,
@@ -16,23 +18,42 @@ import {
   Title,
   TypeMealButton,
 } from "./styles";
-
-import { StatusBar } from "expo-status-bar";
 import { useTheme } from "styled-components/native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import DateTimePicker, { type DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { Text } from "react-native";
+
 import type { StatusType } from "src/@types/Status";
+
+import type { MealStorageDTO } from "@storage/meal/mealStorageDTO";
+import { mealAdd } from "@storage/meal/mealAdd";
+
+import { dateToString, stringToDate } from "src/utils/DateFunctions";
+
+import { ModalWarning } from "@components/ModalWarning";
+import { GenerateRandomId } from "src/utils/GenerateRandomId";
+
+type RouteParams = {
+  meal?: MealStorageDTO;
+};
 
 export function NewMeal() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const routes = useRoute();
+  const params = routes.params as RouteParams;
+  const meal = params?.meal;
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [mealTime, setMealTime] = useState<Date>(new Date());
+  const [mealTime, setMealTime] = useState<Date>();
+  const [status, setStatus] = useState<StatusType>("none");
+
   const [showDatePick, setShowDatePick] = useState(false);
   const [showTimePick, setShowTimePick] = useState(false);
-  const [status, setStatus] = useState<StatusType | "">("");
+
+  const [warningText, setWarningText] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   function handleGoBack() {
     navigation.navigate("home");
@@ -40,6 +61,10 @@ export function NewMeal() {
 
   function handleOpenDatePick() {
     setShowDatePick(true);
+  }
+
+  function handleOpenTimePick() {
+    setShowTimePick(true);
   }
 
   function returnFormatedDate(date?: Date) {
@@ -56,21 +81,20 @@ export function NewMeal() {
     return formattedDate;
   }
 
-  function handleOpenTimePick() {
-    setShowTimePick(true);
-  }
-
   function returnFormatedTime(time?: Date) {
     if (!time) {
       return "";
     }
-
-    return time.getHours() + ":" + (time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes());
+    let hours = time.getHours() < 10 ? "0" + time.getHours() : time.getHours();
+    let minute = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+    return `${hours}:${minute}`;
   }
 
   function handleChangeMealTime(event: DateTimePickerEvent, selectedDate?: Date) {
     const currentDate = selectedDate || mealTime;
     setShowTimePick(false);
+    setShowDatePick(false);
+
     setMealTime(currentDate);
   }
 
@@ -78,9 +102,47 @@ export function NewMeal() {
     setStatus(status);
   }
 
-  function handleSubmit() {
-    navigation.navigate("registratedMeal", { status: "right" });
+  function checkValuesForm() {
+    if (description.trim() == "" || status.trim() == "" || name.trim() == "" || !mealTime) {
+      return false;
+    }
+
+    return true;
   }
+
+  async function handleSubmit() {
+    try {
+      if (!checkValuesForm()) {
+        setShowModal(true);
+        setWarningText("Todos os campos são obrigatórios.");
+        return;
+      }
+
+      let newMeal: MealStorageDTO = {
+        description,
+        status: status,
+        name,
+        time: mealTime ? dateToString(mealTime) : "",
+        id: meal ? meal.id : GenerateRandomId(20),
+      };
+
+      await mealAdd(newMeal);
+
+      navigation.navigate("registratedMeal", { status: status });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (meal) {
+      let date = new Date(stringToDate(meal.time));
+      setName(meal.name);
+      setDescription(meal.description);
+      setStatus(meal.status);
+      setMealTime(isNaN(date.getTime()) ? new Date() : date);
+    }
+  }, []);
 
   return (
     <>
@@ -108,29 +170,35 @@ export function NewMeal() {
           <HorizontalBox>
             <InputContainer horizontal>
               <InputLabel>Data </InputLabel>
-              <Input
-                value={returnFormatedDate(mealTime)}
-                onPress={handleOpenDatePick}
-                placeholderTextColor={theme.COLORS.GRAY_1}
-              />
+
+              <DateTimeButton onPress={handleOpenDatePick}>
+                <DateTimeText>{returnFormatedDate(mealTime)}</DateTimeText>
+              </DateTimeButton>
               {showDatePick ? (
-                <DateTimePicker onChange={handleChangeMealTime} value={mealTime} mode="date" display="default" />
+                <DateTimePicker
+                  onChange={handleChangeMealTime}
+                  value={mealTime ?? new Date()}
+                  mode="date"
+                  display="default"
+                />
               ) : (
                 ""
               )}
             </InputContainer>
             <InputContainer horizontal>
               <InputLabel>Hora</InputLabel>
-              <Input
-                value={returnFormatedTime(mealTime)}
-                onPress={handleOpenTimePick}
-                placeholderTextColor={theme.COLORS.GRAY_1}
-              />
-              {showTimePick ? <DateTimePicker onChange={handleChangeMealTime} value={mealTime} mode="time" /> : ""}
+              <DateTimeButton onPress={handleOpenTimePick}>
+                <DateTimeText>{returnFormatedTime(mealTime)}</DateTimeText>
+              </DateTimeButton>
+              {showTimePick ? (
+                <DateTimePicker onChange={handleChangeMealTime} value={mealTime ?? new Date()} mode="time" />
+              ) : (
+                ""
+              )}
             </InputContainer>
           </HorizontalBox>
 
-          <InputLabel>Hora</InputLabel>
+          <InputLabel>Teste</InputLabel>
 
           <HorizontalBox>
             <TypeMealButton onPress={() => handleChangeMealStatus("right")} status="right" checked={status == "right"}>
@@ -149,6 +217,8 @@ export function NewMeal() {
             </SubmitButton>
           </Footer>
         </Content>
+
+        <ModalWarning setModalOf={setShowModal} visible={showModal} text={warningText} />
       </Container>
     </>
   );

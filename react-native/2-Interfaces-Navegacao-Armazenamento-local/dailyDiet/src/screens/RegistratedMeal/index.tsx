@@ -22,7 +22,6 @@ export function RegistratedMeal() {
   const route = useRoute();
   const { status } = route.params as RouteParams;
 
-  console.log(status);
   return (
     <>
       <StatusBar translucent></StatusBar>

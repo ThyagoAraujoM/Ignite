@@ -1,3 +1,4 @@
+import type { MealStorageDTO } from "@storage/meal/mealStorageDTO";
 import type { StatusType } from "./Status";
 
 export declare global {
@@ -5,9 +6,16 @@ export declare global {
     interface RootParamList {
       home: undefined;
       overview: undefined;
-      newmeal: undefined;
+      newmeal:
+        | {
+            meal: MealStorageDTO;
+          }
+        | undefined;
       registratedMeal: {
         status: StatusType;
+      };
+      meal: {
+        meal: MealStorageDTO;
       };
     }
   }

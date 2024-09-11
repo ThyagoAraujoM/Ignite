@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   status: StatusType;
-  title: string;
+  title: number;
   subText: string;
   isOverViewPage: boolean;
 };
@@ -40,7 +40,7 @@ export function DietScore({ status, subText, title, isOverViewPage }: Props) {
           color={status == "right" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK}
         />
       )}
-      <Score>{title}</Score>
+      <Score>{title}%</Score>
       <ScoreSubText>{subText}</ScoreSubText>
     </Container>
   );

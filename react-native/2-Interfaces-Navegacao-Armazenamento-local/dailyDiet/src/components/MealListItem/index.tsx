@@ -1,14 +1,16 @@
-import { Container, Divisor, MealStatus, MealText, MealTime, type MealStatusType } from "./styles";
+import type { TouchableOpacityProps } from "react-native";
+import { Container, Divisor, MealStatus, MealText, MealTime } from "./styles";
+import type { StatusType } from "src/@types/Status";
 
-type Props = {
+type Props = TouchableOpacityProps & {
   time: string;
   text: string;
-  status: MealStatusType;
+  status: StatusType;
 };
 
-export function MealListItem({ status, text, time }: Props) {
+export function MealListItem({ status, text, time, onPress }: Props) {
   return (
-    <Container>
+    <Container onPress={onPress}>
       <MealTime>{time}</MealTime>
       <Divisor />
       <MealText>{text}</MealText>
