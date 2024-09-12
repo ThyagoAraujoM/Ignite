@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Image, StatusBar } from "react-native";
-import NiceMeal from "@assets/NiceMeal.png";
+import { StatusBar } from "react-native";
 import { Container, GoHomeButton, GoHomeText } from "./styles";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FeedbackNiceMeal } from "@components/FeedbackNiceMeal";
