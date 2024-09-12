@@ -15,7 +15,6 @@ export default function App() {
     <>
       <ThemeProvider theme={defaultTheme}>
         <StatusBar style="light" backgroundColor="transparent" translucent />
-        {/* {fontsLoaded ? <Groups /> : <Loading />} */}
         {fontsLoaded ? <Routes /> : <Loading />}
       </ThemeProvider>
     </>
