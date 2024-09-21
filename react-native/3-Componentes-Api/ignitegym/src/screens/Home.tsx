@@ -3,6 +3,8 @@ import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
 import { Heading } from "@gluestack-ui/themed";
 import { Center, HStack, Text, VStack } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
+import type { AppNavigationRoutesProos } from "@routes/app.routes";
 import { useState } from "react";
 import { FlatList } from "react-native";
 
@@ -15,6 +17,12 @@ export function Home() {
     "Remada unilateral",
     "Levantamento terra",
   ]);
+
+  const navigation = useNavigation<AppNavigationRoutesProos>();
+
+  function handleOpenExerciseDetails() {
+    navigation.navigate("exercise");
+  }
 
   return (
     <VStack flex={1}>
@@ -44,7 +52,7 @@ export function Home() {
 
         <FlatList
           data={exercises}
-          renderItem={({ item }) => <ExerciseCard title={item} />}
+          renderItem={({ item }) => <ExerciseCard title={item} onPress={handleOpenExerciseDetails} />}
           keyExtractor={(item, index) => index.toString()}
         />
       </VStack>

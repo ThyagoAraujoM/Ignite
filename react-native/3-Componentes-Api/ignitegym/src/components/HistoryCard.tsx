@@ -18,8 +18,8 @@ export function HistoryCard({ exercise, muscle, time }: Props) {
       alignItems="center"
       justifyContent="space-between"
     >
-      <VStack mr="$5">
-        <Heading color="$white" fontSize="$md" textTransform="capitalize" fontFamily="$heading">
+      <VStack mr="$5" flex={1}>
+        <Heading color="$white" fontSize="$md" textTransform="capitalize" fontFamily="$heading" numberOfLines={1}>
           {muscle}
         </Heading>
 
