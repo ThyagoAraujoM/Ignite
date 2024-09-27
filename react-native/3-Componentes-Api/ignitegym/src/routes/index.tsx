@@ -10,7 +10,7 @@ export function Routes() {
 
   return (
     <NavigationContainer theme={theme}>
-      <AppRoutes></AppRoutes>
+      <AuthRoutes></AuthRoutes>
     </NavigationContainer>
   );
 }
