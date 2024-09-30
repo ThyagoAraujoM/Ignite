@@ -1,4 +1,4 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from "@gluestack-ui/themed";
+import { Center, Heading, Image, ScrollView, Text, useToast, VStack } from "@gluestack-ui/themed";
 import React, { useState } from "react";
 
 import BackgroundImg from "@assets/background.png";
@@ -9,6 +9,10 @@ import { useNavigation } from "@react-navigation/native";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { api } from "@services/api";
+import axios from "axios";
+import { Alert } from "react-native";
+import { AppError } from "@utils/AppError";
 
 type FormDataProps = {
   name: string;
@@ -20,7 +24,7 @@ type FormDataProps = {
 const signUpSchema = yup.object({
   name: yup.string().required("Informe o nome"),
   email: yup.string().email("Informe um email válido").required("Informe o email"),
-  password: yup.string().min(8, "A senha precisa ter no mínimo 8 caracteres").required("Informe a senha"),
+  password: yup.string().min(4, "A senha precisa ter no mínimo 8 caracteres").required("Informe a senha"),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password")], "As senhas devem ser iguais")
@@ -29,6 +33,8 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
   const navigation = useNavigation();
+
+  const toast = useToast();
 
   const {
     control,
@@ -40,8 +46,28 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp(data: FormDataProps) {
-    console.log(data);
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    try {
+      const response = await api.post("/users", { name, email, password });
+    } catch (error) {
+      console.log(error);
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : "Não foi possível criar a conta. Tente novamente mais tarde.";
+
+      toast.show({
+        placement: "top",
+        render: () => {
+          return (
+            <VStack mt="$20" flex={1} bgColor="$error500">
+              <Center padding="$4" borderRadius="$md">
+                <Text color="$white">{title}</Text>
+              </Center>
+            </VStack>
+          );
+        },
+        duration: 3000,
+      });
+    }
   }
 
   return (
