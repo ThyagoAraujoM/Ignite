@@ -49,8 +49,8 @@ export function SignUp() {
   async function handleSignUp({ name, email, password }: FormDataProps) {
     try {
       const response = await api.post("/users", { name, email, password });
+      console.log(response);
     } catch (error) {
-      console.log(error);
       const isAppError = error instanceof AppError;
       const title = isAppError ? error.message : "Não foi possível criar a conta. Tente novamente mais tarde.";
 

@@ -1,5 +1,5 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from "@gluestack-ui/themed";
-import React from "react";
+import { Center, Heading, Image, ScrollView, Text, useToast, VStack } from "@gluestack-ui/themed";
+import React, { useState } from "react";
 
 import BackgroundImg from "@assets/background.png";
 import Logo from "@assets/logo.svg";
@@ -7,11 +7,64 @@ import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
+
+type FormDataProps = {
+  email: string;
+  password: string;
+};
+
+const signUpSchema = yup.object({
+  email: yup.string().email("Informe um email válido").required("Informe o email"),
+  password: yup.string().min(4, "A senha precisa ter no mínimo 8 caracteres").required("Informe a senha"),
+});
+
 export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { signIn } = useAuth();
+
+  const toast = useToast();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({ resolver: yupResolver(signUpSchema) });
 
   function handleNewAccount() {
     navigation.navigate("signUp");
+  }
+
+  async function handleSingIn({ email, password }: FormDataProps) {
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      setIsLoading(false);
+
+      const title = isAppError ? error.message : "Não foi possível fazer login. Tente novamente mais tarde.";
+
+      toast.show({
+        placement: "top",
+        render: () => {
+          return (
+            <VStack mt="$20" flex={1} bgColor="$error500">
+              <Center padding="$4" borderRadius="$md">
+                <Text color="$white">{title}</Text>
+              </Center>
+            </VStack>
+          );
+        },
+        duration: 3000,
+      });
+    }
   }
 
   return (
@@ -35,9 +88,34 @@ export function SignIn() {
 
           <Center gap="$2">
             <Heading color="$gray100">Acesse a conta</Heading>
-            <Input keyboardType="email-address" autoCapitalize="none" placeholder="E-mail" />
-            <Input placeholder="Senha" secureTextEntry />
-            <Button title="Acessar" />
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <Input
+                  onChangeText={onChange}
+                  errorMessage={errors.email?.message}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  placeholder="E-mail"
+                />
+              )}
+            />
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <Input
+                  onChangeText={onChange}
+                  errorMessage={errors.password?.message}
+                  placeholder="Senha"
+                  secureTextEntry
+                />
+              )}
+            />
+
+            <Button isLoading={isLoading} title="Acessar" onPress={handleSubmit(handleSingIn)} />
           </Center>
 
           <Center flex={1} justifyContent="flex-end" mt="$4">
