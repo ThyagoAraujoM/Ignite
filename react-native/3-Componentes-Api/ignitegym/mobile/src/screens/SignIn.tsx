@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "@hooks/useAuth";
 import { AppError } from "@utils/AppError";
+import { ToastMessage } from "@components/ToastMessage";
 
 type FormDataProps = {
   email: string;
@@ -53,15 +54,7 @@ export function SignIn() {
 
       toast.show({
         placement: "top",
-        render: () => {
-          return (
-            <VStack mt="$20" flex={1} bgColor="$error500">
-              <Center padding="$4" borderRadius="$md">
-                <Text color="$white">{title}</Text>
-              </Center>
-            </VStack>
-          );
-        },
+        render: ({ id }) => <ToastMessage id={id} action="error" onClose={() => toast.close(id)} title={title} />,
         duration: 3000,
       });
     }

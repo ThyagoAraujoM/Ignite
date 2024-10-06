@@ -14,6 +14,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 import { AppError } from "@utils/AppError";
 import { useAuth } from "@hooks/useAuth";
+import { ToastMessage } from "@components/ToastMessage";
 
 type FormDataProps = {
   name: string;
@@ -60,15 +61,7 @@ export function SignUp() {
 
       toast.show({
         placement: "top",
-        render: () => {
-          return (
-            <VStack mt="$20" flex={1} bgColor="$error500">
-              <Center padding="$4" borderRadius="$md">
-                <Text color="$white">{title}</Text>
-              </Center>
-            </VStack>
-          );
-        },
+        render: ({ id }) => <ToastMessage id={id} action="error" onClose={() => toast.close(id)} title={title} />,
         duration: 3000,
       });
     } finally {
