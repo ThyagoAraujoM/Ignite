@@ -1,12 +1,11 @@
+import type { HistoryDTO } from "@dtos/HistoryDTO";
 import { Heading, HStack, Text, VStack } from "@gluestack-ui/themed";
 
 type Props = {
-  muscle: string;
-  exercise: string;
-  time: string;
+  data: HistoryDTO;
 };
 
-export function HistoryCard({ exercise, muscle, time }: Props) {
+export function HistoryCard({ data }: Props) {
   return (
     <HStack
       w="$full"
@@ -20,15 +19,15 @@ export function HistoryCard({ exercise, muscle, time }: Props) {
     >
       <VStack mr="$5" flex={1}>
         <Heading color="$white" fontSize="$md" textTransform="capitalize" fontFamily="$heading" numberOfLines={1}>
-          {muscle}
+          {data.group}
         </Heading>
 
         <Text color="$gray100" fontSize="$lg" numberOfLines={1}>
-          {exercise}
+          {data.name}
         </Text>
       </VStack>
       <Text color="$gray300" fontSize="$md">
-        {time}
+        {data.hour}
       </Text>
     </HStack>
   );
