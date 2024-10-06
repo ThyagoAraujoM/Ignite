@@ -1,10 +1,13 @@
 import type { UserDTO } from "@dtos/UserDTO";
 import { api } from "@services/api";
-import { createContext, useState, type ReactNode } from "react";
+import { storageUserGet, storageUserSave, storageUserRemove } from "@storage/storageUser";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 
 export type AuthContextDataProps = {
   user: UserDTO;
   signIn: (email: string, password: string) => Promise<void>;
+  isLoadingUserStorageData: boolean;
+  signOut: () => Promise<void>;
 };
 
 type AuthContentProviderProps = {
@@ -14,30 +17,59 @@ type AuthContentProviderProps = {
 export const AuthContext = createContext<AuthContextDataProps>({} as AuthContextDataProps);
 
 export function AuthContextProvider({ children }: AuthContentProviderProps) {
-  const [user, setUser] = useState({
-    id: "teste",
-    avatar: "ts",
-    email: "tste",
-    name: "teste",
-  });
+  const [user, setUser] = useState<UserDTO>({} as UserDTO);
+  const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true);
 
   async function signIn(email: string, password: string) {
     try {
       const { data } = await api.post("/sessions", { email, password });
       if (data.user) {
         setUser(data.user);
+        storageUserSave(data.user);
       }
-      console.log(data.user);
     } catch (error) {
       throw error;
     }
   }
+
+  async function signOut() {
+    try {
+      setIsLoadingUserStorageData(true);
+      setUser({} as UserDTO);
+
+      await storageUserRemove();
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoadingUserStorageData(false);
+    }
+  }
+
+  async function loadUserData() {
+    try {
+      const userLogged = await storageUserGet();
+
+      if (userLogged) {
+        setUser(userLogged);
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoadingUserStorageData(false);
+    }
+  }
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         user,
         signIn,
+        isLoadingUserStorageData,
+        signOut,
       }}
     >
       {children}
