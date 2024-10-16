@@ -43,6 +43,7 @@ export function History() {
 
   useFocusEffect(
     useCallback(() => {
+      console.log("teste");
       fetchHistory();
     }, [])
   );
