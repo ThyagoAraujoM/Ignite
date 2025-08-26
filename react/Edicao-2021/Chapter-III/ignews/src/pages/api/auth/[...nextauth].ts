@@ -1,8 +1,6 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { db, dbAdmin } from "../../../services/firebase";
-import { addDoc, collection } from "firebase/firestore";
-import { getAuth } from "firebase-admin/auth";
+import { dbAdmin } from "../../../services/firebaseAdmin";
 
 export const authOptions = {
   // Configure one or more authentication providers

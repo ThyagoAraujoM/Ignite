@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,21 +17,6 @@ const firebaseConfig = {
   measurementId: "G-BDWPLMCP8E"
 };
 
-// Initialize Firebase
+// Initialize Firebase FRONTEND
 const firebaseApp = initializeApp(firebaseConfig);
-export const db = getFirestore(firebaseApp);
-
-
-import * as admin from "firebase-admin";
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    }),
-  });
-}
-
-export const dbAdmin = admin.firestore();
+export const dbClient = getFirestore(firebaseApp);
