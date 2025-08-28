@@ -15,7 +15,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(!user){
       return res.status(400).end("User not found.")
     }
-    
     if (!user.stripe_customer_id) {
       const stripeCustomer = await stripe.customers.create({
         email: session.user.email,
@@ -54,7 +53,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 async function getUser(session): Promise<User|null> {
-  const snapshot = await dbAdmin
+  const snapshot = await dbAdmin 
     .collection("users")
     .where("email", "==", session.user.email)
     .get();
