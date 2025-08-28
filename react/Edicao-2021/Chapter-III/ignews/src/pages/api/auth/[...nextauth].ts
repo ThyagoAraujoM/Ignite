@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { dbAdmin } from "../../../services/firebaseAdmin";
+import { createUser } from "../../../Models/User";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -15,17 +16,17 @@ export const authOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        const userRef = dbAdmin.collection("users").doc(user.id);
-        await userRef.set(
-          {
-            name: user.name,
-            email: user.email,
-            image: user.image,
-            provider: account.provider,
-            updatedAt: new Date(),
-          },
-          { merge: true }
-        );
+        const userData = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          provider: account.provider,
+          updatedAt: new Date(),
+        };
+        
+        await createUser(userData);
+
         return true;
       } catch (e) {
         console.error("Erro ao adicionar documento: ", e);

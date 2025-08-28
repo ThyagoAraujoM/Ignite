@@ -1,31 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { stripe } from "../../services/stripe";
 import { getSession } from "next-auth/react";
-import { dbAdmin } from "../../services/firebaseAdmin";
-
-type User = {
-  id: string;
-  stripe_customer_id?: string;
-};
+import { getUserByEmail, updateUser } from "../../Models/User";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method == "POST") {
     const session = await getSession({ req });
-    const user = await getUser(session);
-    if(!user){
-      return res.status(400).end("User not found.")
+    const user = await getUserByEmail(session.user.email);
+
+    if (!user) {
+      return res.status(400).end("User not found.");
     }
+
     if (!user.stripe_customer_id) {
       const stripeCustomer = await stripe.customers.create({
         email: session.user.email,
       });
-
-      await dbAdmin.collection("users").doc(user.id).set(
-        {
-          stripe_customer_id: stripeCustomer.id,
-        },
-        { merge: true }
-      );
+      await updateUser(user.id, {
+        stripe_customer_id: stripeCustomer.id,
+      });
+      
       user.stripe_customer_id = stripeCustomer.id;
     }
 
@@ -51,20 +45,3 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(401).end("Method not allowed");
   }
 };
-
-async function getUser(session): Promise<User|null> {
-  const snapshot = await dbAdmin 
-    .collection("users")
-    .where("email", "==", session.user.email)
-    .get();
-
-  if (snapshot.empty) {
-    return null;
-  }
-
-  const userDoc = snapshot.docs[0];
-  return {
-    id: userDoc.id,
-    ...(userDoc.data() as Omit<User, "id">),
-  };;
-}
