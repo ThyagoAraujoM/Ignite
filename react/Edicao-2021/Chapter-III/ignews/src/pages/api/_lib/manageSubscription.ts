@@ -17,9 +17,9 @@ export async function saveSubscription(
     updatedAt: new Date(),
   };
 
-  const descriptionRef = dbAdmin
+  const subscriptionRef = dbAdmin
     .collection("subscription")
     .doc(subscription.id);
-    
-  await descriptionRef.set(subscriptionData);
+  
+  await subscriptionRef.set(subscriptionData);
 }

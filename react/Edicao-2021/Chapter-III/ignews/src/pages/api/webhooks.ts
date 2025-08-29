@@ -20,7 +20,12 @@ export const config = {
   },
 };
 
-const relevantEvents = new Set(["checkout.session.completed"]);
+const relevantEvents = new Set([
+  "checkout.session.completed",
+  "customer.subscription.created",
+  "customer.subscription.updated",
+  "customer.subscription.deleted",
+]);
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method == "POST") {
@@ -44,17 +49,37 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (relevantEvents.has(type)) {
       try {
         switch (type) {
-          case `checkout.session.completed`:
-            const checkoutSession = event.data.object as Stripe.Checkout.Session;
-              await saveSubscription(checkoutSession.subscription.toString(), checkoutSession.customer.toString());
+          case "customer.subscription.created":
             break;
+          case "customer.subscription.updated":
+            break;
+          case "customer.subscription.deleted":
+            const subscription = event.data.object as Stripe.Subscription;
+            console.log(type);
 
+            await saveSubscription(
+              subscription.id,
+              subscription.customer.toString()
+            );
+            break;
+          case "checkout.session.completed":
+            const checkoutSession = event.data
+              .object as Stripe.Checkout.Session;
+
+            console.log(checkoutSession.subscription.toString(),
+              checkoutSession.customer.toString());
+            
+            await saveSubscription(
+              checkoutSession.subscription.toString(),
+              checkoutSession.customer.toString()
+            );
+            break;
           default:
             throw new Error("Unhandled event.");
         }
       } catch (error) {
         // sentry, bugsnag
-        return res.json({error: "Webhook handle failed."});
+        return res.json({ error: "Webhook handle failed." });
       }
     }
 
