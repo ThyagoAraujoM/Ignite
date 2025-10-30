@@ -5,6 +5,7 @@ import { asText } from "@prismicio/client/richtext";
 import { asHTML } from "@prismicio/client";
 import Head from "next/head";
 import styles from "./post.module.scss";
+import type { Session } from "next-auth";
 
 interface PostProps {
   post: {
@@ -13,6 +14,12 @@ interface PostProps {
     content: string;
     updatedAt: string;
   };
+}
+
+type SessionWithSubscription = Session & {
+  activeSubscription: {
+    status: "active" | "canceled"
+  }
 }
 
 export default function Post({ post }: PostProps) {
@@ -36,11 +43,17 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   params,
 }) => {
-  const session = await getSession({ req });
+  const session = await getSession({ req }) as SessionWithSubscription;
   const { slug } = params;
-
-  // if(!sessions){
-  // }
+  
+  if(!session.activeSubscription){
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    }
+  }
 
   const prismic = createClient();
 

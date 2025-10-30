@@ -1,9 +1,8 @@
-import NextAuth from "next-auth";
+import NextAuth, { type AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { dbAdmin } from "../../../services/firebaseAdmin";
-import { createUser } from "../../../Models/User";
+import { createUser, getSubscriptionByUserEmail } from "../../../Models/User";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -14,6 +13,13 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async session({ session, token, user }) {
+      const userEmail = session.user.email;
+      const userActiveSubscription =
+        await getSubscriptionByUserEmail(userEmail);
+        
+      return { ...session, activeSubscription: userActiveSubscription };
+    },
     async signIn({ user, account, profile }) {
       try {
         const userData = {
@@ -24,7 +30,7 @@ export const authOptions = {
           provider: account.provider,
           updatedAt: new Date(),
         };
-        
+
         await createUser(userData);
 
         return true;

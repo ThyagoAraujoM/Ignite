@@ -32,6 +32,33 @@ export async function getUserByEmail(userEmail: string): Promise<User | null> {
   };
 }
 
+export async function getSubscriptionByUserEmail(userEmail: string): Promise<any> {
+  const snapshot = await dbAdmin
+    .collection("users")
+    .where("email", "==", userEmail)
+    .get();
+
+  if (snapshot.empty) {
+    return null;
+  }
+
+  const userDoc = snapshot.docs[0];
+  const userId = userDoc.id;
+  
+  const subSnapshot = await dbAdmin
+    .collection("subscription")
+    .where("userId", "==", userId)
+    .where("status", "==", "active")
+    .limit(1)
+    .get();
+
+  if (subSnapshot.empty) {
+    return null;
+  }
+
+  return subSnapshot.docs[0].data();
+}
+
 export async function getUserByCustomerId(customerId: string): Promise<any> {
   const snapshot = await dbAdmin
     .collection("users")
