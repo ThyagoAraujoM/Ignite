@@ -17,6 +17,7 @@ declare namespace NodeJS {
     FIREBASE_TOKEN_URI: string;
     NEXTAUTH_SECRET: string;
     NEXTAUTH_URL: string;
+    PRISMIC_ACCESS_TOKEN: string;
     // Add others as needed...
   }
 }
