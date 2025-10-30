@@ -1,4 +1,4 @@
-import type { GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { asText } from "@prismicio/client/richtext";
 import { asHTML, type RichTextField } from "@prismicio/client";
 import Head from "next/head";
@@ -22,9 +22,9 @@ export default function PostPreviewProps({ post }: PostPreviewProps) {
   const session = useSession();
   const router = useRouter();
 
-  useEffect(()=>{
-    if(session?.data){
-      router.push(`/posts/${post.slug}`)
+  useEffect(() => {
+    if (session?.data) {
+      router.push(`/posts/${post.slug}`);
     }
   }, [session]);
 
@@ -44,8 +44,7 @@ export default function PostPreviewProps({ post }: PostPreviewProps) {
 
           <div className={styles.continueReading}>
             Wanna continue reading?
-            <Link href={`/`}>
-            Subscribe now 🤗</Link>
+            <Link href={`/`}>Subscribe now 🤗</Link>
           </div>
         </article>
       </main>
@@ -53,10 +52,17 @@ export default function PostPreviewProps({ post }: PostPreviewProps) {
   );
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: [],
+    paths: [
+      {
+        params: {
+          slug: "aprenda-qualquer-coisa-com-o-assistente-de-ia-do-google",
+        },
+      },
+    ],
     fallback: "blocking",
+    // true, false, blocking
   };
 };
 
@@ -81,5 +87,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ),
   };
 
-  return { props: { post } };
+  return {
+    props: { post },
+    revalidate: 60 * 30, // 30 minutes
+  };
 };
